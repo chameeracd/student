@@ -24,8 +24,7 @@ class StudentData extends Migration
                                 'constraint' => '255',
                         ],
                         'mark' => [
-                                'type'       => 'DECIMAL',
-                                'constraint' => '10,2',
+                                'type'       => 'TINYINT'
                         ],
                         'semester' => [
                                 'type'       => 'VARCHAR',
