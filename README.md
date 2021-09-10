@@ -7,7 +7,7 @@ and any database settings.
 
 Run `php spark migrate` to create the table
 
-Run `` to populate test data
+Run `php spark db:seed MarkSeeder` to populate test data (will take some time)
 
 ## Run
 
