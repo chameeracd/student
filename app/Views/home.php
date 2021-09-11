@@ -13,7 +13,7 @@
 	<!-- STYLES -->
 
 	<style {csp-style-nonce}>
-	
+
 	</style>
 
 	<?php
@@ -31,7 +31,8 @@
 <div class="container">
 	<div class="row text-center"><legend>Student Marks Visualizer</legend></div>
 	<?php $attributes = array("class" => "form-inline justify-content-center", "id" => "filter", "name" => "filter");
-	echo form_open("home/index", $attributes);?>
+		echo form_open("home/index", $attributes);?>
+
 		<label for="student">Student ID:</label>
 		&nbsp;<?php $attributes = 'class="form-control" id="student"';
 		echo form_dropdown('student', $students, set_value('student'), $attributes); ?>&nbsp;
@@ -49,12 +50,94 @@
 		echo form_dropdown('year', $years, set_value('year'), $attributes); ?>&nbsp;
 
 		&nbsp;<button type="submit" class="btn btn-primary">Submit</button>
+
 	<?php echo form_close(); ?>
+
+	<div class="row">
+		<div id="boxplot" class="w-100"></div>
+	</div>
 </div>
 
 <!-- SCRIPTS -->
 
+<script src="https://releases.jquery.com/git/jquery-git.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
 <script>
+    $(function(){
+		<?php if(isset($boxplot)) { ?>
+        Highcharts.chart('boxplot', {
+
+			chart: {
+				type: 'boxplot'
+			},
+
+			title: {
+				text: 'Boxplot'
+			},
+
+			legend: {
+				enabled: false
+			},
+
+			xAxis: {
+				categories: <?php echo json_encode($boxplot['categories']); ?>,
+				title: {
+					text: 'Subject'
+				}
+			},
+
+			yAxis: {
+				title: {
+					text: 'Marks'
+				}
+			},
+
+			series: [{
+				name: 'Marks',
+				data: <?php echo json_encode($boxplot['plot']); ?>,
+				tooltip: {
+					headerFormat: '<em>Subject {point.key}</em><br/>'
+				}
+			},{
+				name: 'Student Mark',
+				color: Highcharts.getOptions().colors[0],
+				type: 'scatter',
+				data: <?php echo json_encode($boxplot['data']); ?>,
+				marker: {
+					fillColor: 'white',
+					lineWidth: 1,
+					lineColor: Highcharts.getOptions().colors[0]
+				},
+				tooltip: {
+					pointFormat: 'Mark: {point.y}'
+				}
+			}]
+
+		});
+    });
+	<?php } ?>
+
+	jQuery.validator.setDefaults({
+		errorElement: 'span',
+		errorPlacement: function (error, element) {
+			error.addClass('invalid-feedback');
+			element.closest('.form-group').append(error);
+		},
+		highlight: function (element, errorClass, validClass) {
+			$(element).addClass('is-invalid');
+		},
+		unhighlight: function (element, errorClass, validClass) {
+			$(element).removeClass('is-invalid');
+		}
+	});
+
+	$("#filter").validate();
 </script>
 
 <!-- -->
