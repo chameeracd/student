@@ -10,27 +10,46 @@ class MarkSeeder extends Seeder
     {
         $students = $this->getStudents();
         $subjects = $this->getSubjects();
+        $grades = $this->getGrades();
 
-        for ($i = 0; $i < 10000; $i++) {
+        $this->db->disableForeignKeyChecks();
+
+        $this->db->query("TRUNCATE TABLE students");
+        $this->db->query("TRUNCATE TABLE subjects");
+        $this->db->query("TRUNCATE TABLE grades");
+        $this->db->query("TRUNCATE TABLE marks");
+
+        $this->db->enableForeignKeyChecks();
+
+        $this->db->table('students')->insertBatch($students);
+        $this->db->table('subjects')->insertBatch($subjects);
+        $this->db->table('grades')->insertBatch($grades);
+
+        $query = $this->db->query("SELECT id FROM students");
+        $studentIds = array_column($query->getResult('array'), 'id');
+
+        $query = $this->db->query("SELECT id FROM subjects");
+        $subjectIds = array_column($query->getResult('array'), 'id');
+
+        $query = $this->db->query("SELECT id FROM grades");
+        $gradeIds = array_column($query->getResult('array'), 'id');
+
+        for ($i = 0; $i < 100; $i++) {
             $data = array();
-            for ($j = 0; $j < 1000; $j++) {
+            for ($j = 0; $j < 100; $j++) {
                 $values = array();
-
-                $k = array_rand($students);
-                $student = $students[$k];
                 
-                $values['student_id'] = $student['id'];
-                $values['subject'] = $subjects[array_rand($subjects)];
+                $values['student_id'] = $studentIds[array_rand($studentIds)];
+                $values['subject_id'] = $subjectIds[array_rand($subjectIds)];
+                $values['grade_id'] = $gradeIds[array_rand($gradeIds)];
                 $values['mark'] = rand(0,100);
                 $values['semester'] = rand(1,2);
-                $values['student_name'] = $student['name'];
-                $values['grade'] = rand(1,12);
                 $values['year'] = $this->getYear();
 
                 $data[] = $values;
             }
 
-            $this->db->table('student_mark')->insertBatch($data);
+            $this->db->table('marks')->insertBatch($data);
         }
     }
 
@@ -46,84 +65,84 @@ class MarkSeeder extends Seeder
     protected function getStudents() {
         $students = array();
         $students[] = [
-            'id' => 'STD_00001',
-            'name' => 'Kaylah Ferry'
+            'student_id' => 'STD_00001',
+            'student_name' => 'Kaylah Ferry'
         ];
         $students[] = [
-            'id' => 'STD_00002',
-            'name' => 'Maggie Murazik'
+            'student_id' => 'STD_00002',
+            'student_name' => 'Maggie Murazik'
         ];
         $students[] = [
-            'id' => 'STD_00003',
-            'name' => 'Taurean Bogisich'
+            'student_id' => 'STD_00003',
+            'student_name' => 'Taurean Bogisich'
         ];
         $students[] = [
-            'id' => 'STD_00004',
-            'name' => 'Malika Murphy'
+            'student_id' => 'STD_00004',
+            'student_name' => 'Malika Murphy'
         ];
         $students[] = [
-            'id' => 'STD_00005',
-            'name' => 'Amara Cole'
+            'student_id' => 'STD_00005',
+            'student_name' => 'Amara Cole'
         ];
         $students[] = [
-            'id' => 'STD_00006',
-            'name' => 'Lucio Kling'
+            'student_id' => 'STD_00006',
+            'student_name' => 'Lucio Kling'
         ];
         $students[] = [
-            'id' => 'STD_00007',
-            'name' => 'Hayden Carroll'
+            'student_id' => 'STD_00007',
+            'student_name' => 'Hayden Carroll'
         ];
         $students[] = [
-            'id' => 'STD_00008',
-            'name' => 'Eden Sporer'
+            'student_id' => 'STD_00008',
+            'student_name' => 'Eden Sporer'
         ];
         $students[] = [
-            'id' => 'STD_00009',
-            'name' => 'Shayna Okuneva'
+            'student_id' => 'STD_00009',
+            'student_name' => 'Shayna Okuneva'
         ];
         $students[] = [
-            'id' => 'STD_00010',
-            'name' => 'Ova Kertzmann'
+            'student_id' => 'STD_00010',
+            'student_name' => 'Ova Kertzmann'
         ];
         $students[] = [
-            'id' => 'STD_00011',
-            'name' => 'Destiney Block'
+            'student_id' => 'STD_00011',
+            'student_name' => 'Destiney Block'
         ];
         $students[] = [
-            'id' => 'STD_00012',
-            'name' => 'Owen White'
+            'student_id' => 'STD_00012',
+            'student_name' => 'Owen White'
         ];
         $students[] = [
-            'id' => 'STD_00013',
-            'name' => 'Mireille Schiller'
+            'student_id' => 'STD_00013',
+            'student_name' => 'Mireille Schiller'
         ];
         $students[] = [
-            'id' => 'STD_00014',
-            'name' => 'Leopold Beahan'
+            'student_id' => 'STD_00014',
+            'student_name' => 'Leopold Beahan'
         ];
         $students[] = [
-            'id' => 'STD_00015',
-            'name' => 'Anne Gutkowski'
+            'student_id' => 'STD_00015',
+            'student_name' => 'Anne Gutkowski'
         ];
         $students[] = [
-            'id' => 'STD_00016',
-            'name' => 'Annabel Streich'
+            'student_id' => 'STD_00016',
+            'student_name' => 'Annabel Streich'
         ];
         $students[] = [
-            'id' => 'STD_00017',
-            'name' => 'Sylvia Wiegand'
+            'student_id' => 'STD_00017',
+            'student_name' => 'Sylvia Wiegand'
         ];
         $students[] = [
-            'id' => 'STD_00018',
-            'name' => 'Jeanette Bergnaum'
+            'student_id' => 'STD_00018',
+            'student_name' => 'Jeanette Bergnaum'
         ];
         $students[] = [
-            'id' => 'STD_00019',
-            'name' => 'Edna Raynor'
+            'student_id' => 'STD_00019',
+            'student_name' => 'Edna Raynor'
         ];
         $students[] = [
-            'id' => 'STD_00020',
-            'name' => 'Charlie Volkman'
+            'student_id' => 'STD_00020',
+            'student_name' => 'Charlie Volkman'
         ];
 
         return $students;
@@ -131,17 +150,70 @@ class MarkSeeder extends Seeder
 
     protected function getSubjects() {
         $subjects = array();
-        $subjects = [
-            'English',
-            'Maths',
-            'Science',
-            'Art',
-            'IT',
-            'Tech',
-            'Media',
-            'Extra'
+        $subjects[] = [
+            'name' => 'English'
+        ];
+        $subjects[] = [
+            'name' => 'Maths'
+        ];
+        $subjects[] = [
+            'name' => 'Science'
+        ];
+        $subjects[] = [
+            'name' => 'Art'
+        ];
+        $subjects[] = [
+            'name' => 'IT'
+        ];
+        $subjects[] = [
+            'name' => 'Tech'
+        ];
+        $subjects[] = [
+            'name' => 'Media'
         ];
 
         return $subjects;
+    }
+
+    protected function getGrades() {
+        $grades = array();
+        $grades[] = [
+            'grade' => '1'
+        ];
+        $grades[] = [
+            'grade' => '2'
+        ];
+        $grades[] = [
+            'grade' => '3'
+        ];
+        $grades[] = [
+            'grade' => '4'
+        ];
+        $grades[] = [
+            'grade' => '5'
+        ];
+        $grades[] = [
+            'grade' => '6'
+        ];
+        $grades[] = [
+            'grade' => '7'
+        ];
+        $grades[] = [
+            'grade' => '8'
+        ];
+        $grades[] = [
+            'grade' => '9'
+        ];
+        $grades[] = [
+            'grade' => '10'
+        ];
+        $grades[] = [
+            'grade' => '11'
+        ];
+        $grades[] = [
+            'grade' => '12'
+        ];
+
+        return $grades;
     }
 }
