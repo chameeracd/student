@@ -56,6 +56,10 @@
 	<div class="row">
 		<div id="boxplot" class="w-100"></div>
 	</div>
+
+	<div class="row">
+		<div id="barchart" class="w-100"></div>
+	</div>
 </div>
 
 <!-- SCRIPTS -->
@@ -71,56 +75,125 @@
 <script>
     $(function(){
 		<?php if(isset($boxplot)) { ?>
-        Highcharts.chart('boxplot', {
+			Highcharts.chart('boxplot', {
 
+				chart: {
+					type: 'boxplot'
+				},
+
+				title: {
+					text: 'Boxplot'
+				},
+
+				legend: {
+					enabled: false
+				},
+
+				xAxis: {
+					categories: <?php echo json_encode($boxplot['categories']); ?>,
+					title: {
+						text: 'Subject'
+					}
+				},
+
+				yAxis: {
+					title: {
+						text: 'Marks'
+					}
+				},
+
+				series: [{
+					name: 'Marks',
+					data: <?php echo json_encode($boxplot['plot']); ?>,
+					tooltip: {
+						headerFormat: '<em>Subject {point.key}</em><br/>'
+					}
+				},
+				{
+					name: 'Student Mark',
+					color: Highcharts.getOptions().colors[0],
+					type: 'scatter',
+					data: <?php echo json_encode($boxplot['data']); ?>,
+					marker: {
+						fillColor: 'white',
+						lineWidth: 1,
+						lineColor: Highcharts.getOptions().colors[0]
+					},
+					tooltip: {
+						pointFormat: 'Mark: {point.y}'
+					}
+				}]
+
+			});
+		});
+	<?php } ?>
+
+	<?php if(isset($barchart)) { ?>
+		Highcharts.chart('barchart', {
 			chart: {
-				type: 'boxplot'
+				zoomType: 'xy'
 			},
-
 			title: {
-				text: 'Boxplot'
+				text: 'Total/Avg Marks for Subject'
 			},
-
+			xAxis: [{
+				categories: <?php echo json_encode($barchart['categories']); ?>,
+				crosshair: true
+			}],
+			yAxis: [{ // Primary yAxis
+				labels: {
+					format: '{value}',
+					style: {
+						color: Highcharts.getOptions().colors[1]
+					}
+				},
+				title: {
+					text: 'Avg',
+					style: {
+						color: Highcharts.getOptions().colors[1]
+					}
+				}
+			}, { // Secondary yAxis
+				title: {
+					text: 'Marks',
+					style: {
+						color: Highcharts.getOptions().colors[0]
+					}
+				},
+				labels: {
+					format: '{value}',
+					style: {
+						color: Highcharts.getOptions().colors[0]
+					}
+				},
+				opposite: true
+			}],
+			tooltip: {
+				shared: true
+			},
 			legend: {
-				enabled: false
+				layout: 'vertical',
+				align: 'left',
+				x: 120,
+				verticalAlign: 'top',
+				y: 100,
+				floating: true,
+				backgroundColor:
+					Highcharts.defaultOptions.legend.backgroundColor || // theme
+					'rgba(255,255,255,0.25)'
 			},
-
-			xAxis: {
-				categories: <?php echo json_encode($boxplot['categories']); ?>,
-				title: {
-					text: 'Subject'
-				}
-			},
-
-			yAxis: {
-				title: {
-					text: 'Marks'
-				}
-			},
-
 			series: [{
 				name: 'Marks',
-				data: <?php echo json_encode($boxplot['plot']); ?>,
-				tooltip: {
-					headerFormat: '<em>Subject {point.key}</em><br/>'
-				}
-			},{
-				name: 'Student Mark',
-				color: Highcharts.getOptions().colors[0],
-				type: 'scatter',
-				data: <?php echo json_encode($boxplot['data']); ?>,
-				marker: {
-					fillColor: 'white',
-					lineWidth: 1,
-					lineColor: Highcharts.getOptions().colors[0]
-				},
-				tooltip: {
-					pointFormat: 'Mark: {point.y}'
-				}
+				type: 'column',
+				yAxis: 1,
+				data: <?php echo json_encode($barchart['total']); ?>
+			},
+			{
+				name: 'Avg',
+				type: 'spline',
+				data: <?php echo json_encode($barchart['avg']); ?>
 			}]
-
 		});
-    });
 	<?php } ?>
 
 	jQuery.validator.setDefaults({

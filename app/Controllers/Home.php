@@ -48,9 +48,11 @@ class Home extends BaseController
         if ($this->request->getMethod() == 'post') {
             //chart generation
             $boxplot = array();
+            $barchart = array();
             $markModel = new \App\Models\MarkModel();
 
             $boxplot['categories'] = array_values($categories);
+            $barchart['categories'] = array_values($categories);
 
             $plot = array();
             $where = array();
@@ -71,6 +73,12 @@ class Home extends BaseController
                                 ->where('subject_id', $subId)
                                 ->findAll();
 
+                $barWhere = $where;
+                $barWhere['subject_id'] = $subId;
+                $totalAvgMarks = $markModel->select('SUM(mark) AS total, AVG(mark) AS avg')
+                                        ->where($barWhere)
+                                        ->findAll();
+
                 if($this->request->getPost('student')) {
                     $where['subject_id'] = $subId;
                     $studentMarks = $markModel->select('mark')
@@ -89,6 +97,8 @@ class Home extends BaseController
                 }
 
                 $values = $this->getBoxPlotValues(array_column($marks, 'mark'));
+                $barchart['total'][] = (int) $totalAvgMarks[0]['total'];
+                $barchart['avg'][] = (float) $totalAvgMarks[0]['avg'];
 
                 $plot[] =  array((int) $values['min'], (int) $values['q1'], (int) $values['median'], (int) $values['q3'], (int) $values['max']);
 
@@ -98,6 +108,7 @@ class Home extends BaseController
             $boxplot['data'] = $studentData;
 
             $data['boxplot'] = $boxplot;
+            $data['barchart'] = $barchart;
         }
 
         return view('home', $data);
