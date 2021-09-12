@@ -2,16 +2,18 @@
 
 ## Setup
 
+`git clone https://github.com/chameeracd/student`
+`cd student`
+`composer update`
+
 Copy `env` to `.env` and tailor for your app, specifically the baseURL
 and any database settings.
 
 Run `php spark migrate` to create the table
 
 Change `.env` for number of records need to be dumped;
-`
-bulk.batchSize = 10
-bulk.repeats = 10
-`
+`bulk.batchSize = 10`
+`bulk.repeats = 10`
 
 Total records will be 10*10 for above values
 
