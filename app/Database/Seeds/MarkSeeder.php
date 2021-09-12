@@ -34,9 +34,11 @@ class MarkSeeder extends Seeder
         $query = $this->db->query("SELECT id FROM grades");
         $gradeIds = array_column($query->getResult('array'), 'id');
 
-        for ($i = 0; $i < 100; $i++) {
+        $batch = (getenv('bulk.batchSize')) ? getenv('bulk.batchSize') : 10000;
+        $repeat = (getenv('bulk.repeats')) ? getenv('bulk.repeats') : 1000;
+        for ($i = 0; $i < $batch; $i++) {
             $data = array();
-            for ($j = 0; $j < 100; $j++) {
+            for ($j = 0; $j < $repeat; $j++) {
                 $values = array();
                 
                 $values['student_id'] = $studentIds[array_rand($studentIds)];

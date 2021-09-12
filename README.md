@@ -7,6 +7,14 @@ and any database settings.
 
 Run `php spark migrate` to create the table
 
+Change `.env` for number of records need to be dumped;
+`
+bulk.batchSize = 10
+bulk.repeats = 10
+`
+
+Total records will be 10*10 for above values
+
 Run `php spark db:seed MarkSeeder` to populate test data (will take some time)
 
 ## Run
@@ -31,3 +39,4 @@ Additionally, make sure that the following extensions are enabled in your PHP:
 
 ## reference
 - https://stackoverflow.com/questions/19210066/how-do-i-get-box-plot-key-numbers-from-an-array-in-php
+- https://www.highcharts.com/
