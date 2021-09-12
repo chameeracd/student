@@ -60,6 +60,10 @@
 	<div class="row">
 		<div id="barchart" class="w-100"></div>
 	</div>
+
+	<div class="row">
+		<div id="barchart2" class="w-100"></div>
+	</div>
 </div>
 
 <!-- SCRIPTS -->
@@ -194,6 +198,44 @@
 				data: <?php echo json_encode($barchart['avg']); ?>
 			}]
 		});
+	<?php } ?>
+
+	<?php if(isset($barchart2)) { ?>
+		Highcharts.chart('barchart2', {
+			chart: {
+				type: 'column'
+			},
+			title: {
+				text: 'Subject Marks'
+			},
+			xAxis: {
+				categories: <?php echo json_encode($barchart2['categories']); ?>,
+				crosshair: true
+			},
+			yAxis: {
+				min: 0,
+				title: {
+					text: 'Marks'
+				}
+			},
+			tooltip: {
+				headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+				pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					'<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+				footerFormat: '</table>',
+				shared: true,
+				useHTML: true
+			},
+			plotOptions: {
+				column: {
+					pointPadding: 0.2,
+					borderWidth: 0
+				}
+			},
+			series: <?php echo json_encode($barchart2['series']); ?>
+		});
+
+		console.log(<?php echo json_encode($barchart2['series']); ?>)
 	<?php } ?>
 
 	jQuery.validator.setDefaults({

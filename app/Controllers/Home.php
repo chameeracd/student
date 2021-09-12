@@ -107,6 +107,42 @@ class Home extends BaseController
             $boxplot['plot'] = $plot;
             $boxplot['data'] = $studentData;
 
+            if($this->request->getPost('student')) {
+                $subjectSem = $markModel->select('year,semester')
+                                ->where('student_id', $this->request->getPost('student'))
+                                ->groupBy('year,semester')
+                                ->orderBy(' year,semester')
+                                ->findAll();
+
+                $series = array();
+                $count = 0;
+                foreach($categories as $subId => $subject) {
+                    $subData = array();
+                    foreach($subjectSem as $sem) {
+                        if($count == 0) {
+                            $barchart2['categories'][] = $sem['year'] . ' - ' . $sem['semester'];
+                        }
+
+                        $subWhere = array();
+                        $subWhere['student_id'] = $this->request->getPost('student');
+                        $subWhere['year'] = $sem['year'];
+                        $subWhere['semester'] = $sem['semester'];
+                        $subWhere['subject_id'] = $subId;
+                        $subMarks = $markModel->select('MAX(mark) as marks')
+                                        ->where($subWhere)
+                                        ->findAll();
+
+                        $subData[] = (int) array_column($subMarks, 'marks')[0];
+                    }
+
+                    $series[] = array('name' => $subject, 'data' => $subData);
+                    $count++;
+                }
+
+                $barchart2['series'] = $series;
+                $data['barchart2'] = $barchart2;
+            }
+
             $data['boxplot'] = $boxplot;
             $data['barchart'] = $barchart;
         }
